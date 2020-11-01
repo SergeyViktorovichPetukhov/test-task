@@ -9,7 +9,7 @@ import java.time.Month;
 
 @Service
 @Slf4j
-public class ExternalApproveService {
+public class  ExternalApproveService {
     private static final LocalDate MIN_ASSESS_DATE = LocalDate.of(2017, Month.OCTOBER, 1);
     private static final int MIN_CAR_YEAR = 2000;
     private static final BigDecimal MIN_CAR_VALUE = BigDecimal.valueOf(1000000);
@@ -19,6 +19,7 @@ public class ExternalApproveService {
 
     public int approve(CollateralObject object) {
         if (object.getDate() == null ||object.getYear() == null || object.getValue() == null || object.getType() == null) {
+            System.out.println(object.getDate() + " " + object.getYear() + " " + object.getValue() + " " + object.getType());
             return -1;
         }
 
@@ -48,12 +49,15 @@ public class ExternalApproveService {
 
     private int approvePlane(CollateralObject object) {
         if (object.getYear() < MIN_PLANE_YEAR) {
+            System.out.println(object.getYear());
             return -20;
         }
         if (object.getDate().isBefore(MIN_ASSESS_DATE)) {
+            System.out.println(object.getDate());
             return -21;
         }
         if (object.getValue().compareTo(MIN_PLANE_VALUE) < 0) {
+            System.out.println(object.getValue());
             return -22;
         }
 
