@@ -1,17 +1,25 @@
 package com.mcb.creditfactory.service;
 
+import com.mcb.creditfactory.dto.AirplaneDto;
+import com.mcb.creditfactory.dto.CarDto;
 import com.mcb.creditfactory.dto.GenericDto;
 import com.mcb.creditfactory.external.CollateralObject;
 import com.mcb.creditfactory.external.ExternalApproveService;
+import com.mcb.creditfactory.model.Airplane;
+import com.mcb.creditfactory.model.AirplaneValuation;
+import com.mcb.creditfactory.model.Car;
+import com.mcb.creditfactory.model.CarValuation;
 import com.mcb.creditfactory.repository.IGenericDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
-class GenericServiceImpl<Entity extends Serializable, Dto> implements GenericService{
+class GenericServiceImpl<Entity extends Serializable, Dto> implements GenericService<Entity,Dto>{
 
     @Autowired
     private IGenericDao<Entity> dao;
@@ -35,32 +43,65 @@ class GenericServiceImpl<Entity extends Serializable, Dto> implements GenericSer
     }
 
     @Override
-    public Object save(Object o) {
-        return dao.create((Entity)o);
+    public Entity save(Entity entity) {
+        return dao.create(entity);
     }
 
     @Override
-    public Optional load(Long id) {
-        return Optional.empty();
+    public Optional<Entity> load(Long id) {
+        return Optional.of(dao.findOne(id));
     }
 
     @Override
-    public Object fromDto(Object o) {
+    public Entity fromDto(Dto o) {
         return null;
     }
 
     @Override
-    public Object toDTO(Object car) {
+    public Dto toDTO(Entity entity) {
         return null;
     }
 
     @Override
-    public Long getId(Object car) {
+    public Long getId(Entity entity) {
+        if (entity instanceof Car){
+            return ((Car) entity).getId();
+        }
+        if (entity instanceof Airplane){
+            return ((Airplane) entity).getId();
+        }
         return null;
     }
 
     @Override
-    public Object addValuation(Object o) {
+    public Entity addValuation(Object o) {
         return null;
+    }
+
+    private List<CarValuation> convertValuation(Dto dto, Entity entity){
+        if (entity instanceof Car){
+            Car car = (Car) entity;
+            CarDto carDto = (CarDto) dto;
+            List<CarValuation> valuations = new ArrayList<>();
+            CarValuation valuation = new CarValuation(
+                    carDto.getValuation().getValue(),
+                    carDto.getValuation().getDate()
+            );
+            valuation.setCar(car);
+            valuations.add(valuation);
+            return valuations;
+        }
+        if (entity instanceof Airplane){
+            Airplane airplane = (Airplane) entity;
+            AirplaneDto airplaneDto = (AirplaneDto) dto;
+            List<AirplaneValuation> valuations = new ArrayList<>();
+            AirplaneValuation valuation = new AirplaneValuation(
+                    airplaneDto.getValuation().getValue(),
+                    airplaneDto.getValuation().getDate()
+            );
+            valuation.setAirplane(airplane);
+            valuations.add(valuation);
+            return valuations;
+        }
     }
 }
