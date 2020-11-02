@@ -3,9 +3,6 @@ package com.mcb.creditfactory.service;
 import com.mcb.creditfactory.dto.AirplaneDto;
 import com.mcb.creditfactory.dto.CarDto;
 import com.mcb.creditfactory.dto.Collateral;
-import com.mcb.creditfactory.dto.GenericDto;
-import com.mcb.creditfactory.model.Airplane;
-import com.mcb.creditfactory.model.Car;
 import com.mcb.creditfactory.service.airplane.AirplaneService;
 import com.mcb.creditfactory.service.car.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,25 +17,9 @@ public class CollateralService {
     private CarService carService;
     @Autowired
     private AirplaneService airplaneService;
-    @Autowired
-    private GenericService genericService;
 
-    @SuppressWarnings("ConstantConditions")
-    public Long saveCollateral(Collateral object)
-            throws ClassNotFoundException {
 
-        if (object instanceof GenericDto){
-            GenericDto dto = (GenericDto) object;
-            boolean approved = genericService.approve(dto);
-            if (!approved) {
-                return null;
-            }
-            return Optional.of(dto)
-                    .map(genericService::fromDto)
-                    .map(genericService::save)
-                    .map(genericService::getId)
-                    .orElse(null);
-        }
+    public Long saveCollateral(Collateral object) {
 
         if (object instanceof CarDto) {
             CarDto car = (CarDto) object;

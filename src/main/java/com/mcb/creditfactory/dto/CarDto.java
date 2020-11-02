@@ -15,6 +15,5 @@ public class CarDto implements Collateral {
     private String model;
     private Double power;
     private Short year;
-    // в транспортном объекте всегда последняя по дате оценка
     private Valuation valuation;
 }

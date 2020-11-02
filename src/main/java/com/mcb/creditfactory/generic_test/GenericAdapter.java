@@ -1,6 +1,5 @@
-package com.mcb.creditfactory.service;
+package com.mcb.creditfactory.generic_test;
 
-import com.mcb.creditfactory.dto.GenericDto;
 import com.mcb.creditfactory.external.CollateralObject;
 import com.mcb.creditfactory.external.CollateralType;
 import lombok.AllArgsConstructor;
@@ -30,6 +29,6 @@ public class GenericAdapter<Dto extends GenericDto> implements CollateralObject 
 
     @Override
     public CollateralType getType() {
-        return CollateralType.CAR;
+        return dto.getType();
     }
 }

@@ -1,4 +1,4 @@
-package com.mcb.creditfactory.service;
+package com.mcb.creditfactory.generic_test;
 
 import java.util.Optional;
 

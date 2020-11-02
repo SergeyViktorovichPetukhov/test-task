@@ -9,6 +9,7 @@ import com.mcb.creditfactory.repository.AirplaneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -23,7 +24,12 @@ public class AirplaneServiceImpl implements AirplaneService {
 
     @Override
     public boolean approve(AirplaneDto dto) {
-        return approveService.approve(new AirplaneAdapter(dto)) == 0;
+        return approveService.approve(
+                new AirplaneAdapter(
+                        dto,
+                        getLastValuationDate(dto.getId())
+                        )
+        ) == 0;
     }
 
     @Override
@@ -53,6 +59,7 @@ public class AirplaneServiceImpl implements AirplaneService {
 
     @Override
     public AirplaneDto toDTO(Airplane airplane) {
+    // в ответе всегда отправляем последнюю по дате оценку, как и в externalApproveService
         AirplaneValuation valuation = airplane.getValuations()
             .stream()
             .max(Comparator.comparing(AirplaneValuation::getDate))
@@ -103,5 +110,17 @@ public class AirplaneServiceImpl implements AirplaneService {
         valuation.setAirplane(airplane);
         valuations.add(valuation);
         return valuations;
+    }
+
+    private LocalDate getLastValuationDate(Long airplaneId){
+        Optional<Airplane> airplane = repository.findById(airplaneId);
+        if (airplane.isPresent()){
+            return airplane.get().getValuations()
+                    .stream()
+                    .map(AirplaneValuation::getDate)
+                    .max(LocalDate::compareTo)
+                    .get();
+        }
+        return null;
     }
 }

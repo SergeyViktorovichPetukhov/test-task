@@ -1,15 +1,12 @@
-package com.mcb.creditfactory.service;
+package com.mcb.creditfactory.generic_test;
 
 import com.mcb.creditfactory.dto.AirplaneDto;
 import com.mcb.creditfactory.dto.CarDto;
-import com.mcb.creditfactory.dto.GenericDto;
-import com.mcb.creditfactory.external.CollateralObject;
 import com.mcb.creditfactory.external.ExternalApproveService;
 import com.mcb.creditfactory.model.Airplane;
 import com.mcb.creditfactory.model.AirplaneValuation;
 import com.mcb.creditfactory.model.Car;
 import com.mcb.creditfactory.model.CarValuation;
-import com.mcb.creditfactory.repository.IGenericDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +41,8 @@ class GenericServiceImpl<Entity extends Serializable, Dto> implements GenericSer
 
     @Override
     public Entity save(Entity entity) {
-        return dao.create(entity);
+      //  return dao.create(entity);
+        return null;
     }
 
     @Override
@@ -101,7 +99,8 @@ class GenericServiceImpl<Entity extends Serializable, Dto> implements GenericSer
             );
             valuation.setAirplane(airplane);
             valuations.add(valuation);
-            return valuations;
+         //   return valuations;
         }
+        return null;
     }
 }

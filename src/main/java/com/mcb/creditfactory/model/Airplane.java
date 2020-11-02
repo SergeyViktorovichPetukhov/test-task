@@ -32,7 +32,7 @@ public class Airplane  {
     @NonNull
     private Integer seats;
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "airplane") //referencedColumnName="airplane_id",
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "airplane")
     private List<AirplaneValuation> valuations;
 
     @Override

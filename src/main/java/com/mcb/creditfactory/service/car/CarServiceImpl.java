@@ -10,6 +10,7 @@ import com.mcb.creditfactory.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -25,7 +26,12 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public boolean approve(CarDto dto) {
-        return approveService.approve(new CarAdapter(dto)) == 0;
+        return approveService.approve(
+                new CarAdapter(
+                        dto,
+                        getLastValuationDate(dto.getId())
+                )
+        ) == 0;
     }
 
     @Override
@@ -54,6 +60,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public CarDto toDTO(Car car) {
+        // в ответе всегда отправляем последнюю по дате оценку, как и в externalApproveService
         CarValuation valuation = car.getValuations()
                 .stream()
                 .max(Comparator.comparing(CarValuation::getDate))
@@ -102,6 +109,20 @@ public class CarServiceImpl implements CarService {
         valuation.setCar(car);
         valuations.add(valuation);
         return valuations;
+    }
+
+    private LocalDate getLastValuationDate(Long carId){
+        Optional<Car> car = repository.findById(carId);
+        if (car.isPresent()){
+    // если дата оценки совпадет с последней, то в externalApproveService
+    // отправляем ту оценку, что была в запросе
+            return car.get().getValuations()
+                    .stream()
+                    .map(CarValuation::getDate)
+                    .max(LocalDate::compareTo)
+                    .get();
+        }
+        return null;
     }
 
 }

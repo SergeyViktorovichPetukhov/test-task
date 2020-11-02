@@ -1,4 +1,4 @@
-package com.mcb.creditfactory.repository;
+package com.mcb.creditfactory.generic_test;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -7,19 +7,19 @@ import java.util.List;
 
 public abstract class AbstractJpaDao< T extends Serializable> {
 
-    private Class< T > clazz;
+    private Class<T> clazz;
 
     @PersistenceContext
     EntityManager entityManager;
 
-    public void setClazz( Class< T > clazzToSet ) {
+    public void setClazz(Class<T> clazzToSet) {
         this.clazz = clazzToSet;
     }
 
     public T findOne( Long id ){
         return entityManager.find( clazz, id );
     }
-    public List< T > findAll(){
+    public List<T> findAll(){
         return entityManager.createQuery( "from " + clazz.getName() )
                 .getResultList();
     }

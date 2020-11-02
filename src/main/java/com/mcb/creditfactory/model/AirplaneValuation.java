@@ -15,7 +15,7 @@ import java.util.Objects;
 @Table(name = "AIRPLANE_VALUATION")
 public class AirplaneValuation {
     @Id
-    @GeneratedValue()
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "value")
     @NonNull
